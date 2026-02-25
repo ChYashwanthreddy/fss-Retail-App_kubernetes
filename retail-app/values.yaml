@@ -1,0 +1,60 @@
+namespace: yash-ns
+
+#Retail App Deployment
+
+replicas: 4
+
+deployment:
+  labels:
+    app: retail
+  name: retail-container
+  port: 3130
+
+image:
+  retail:
+    repository: saiteja2502/userprofileretail
+    tag: latest
+  mongodb:
+    repository: mongo
+    tag: latest
+
+#Retail App Service
+
+service:
+  retail:
+    app: retail
+    port: 80
+    type: LoadBalancer
+
+#MongoDB StatefulSet
+
+mongodb:
+  replicas: 3
+  app: mongodb
+  port: 27017
+  database: myDatabase
+  storageSize: 1Gi
+  pvcSize: 2Gi
+
+
+#ConfigMap Values
+
+config:
+  MONGODB_URI: mongodb://mongodb:27017/myDatabase
+  SESSION_SECRET: "1234"
+  PORT: "3130"
+
+#Secret Values(Base64)
+
+secret:
+  EMAIL_USER: Y2hhZ2FudHl0ZWphMjUwMkBnbWFpbC5jb20=
+  EMAIL_PASS: eXhvcSBianVrIHJkbnQgYWx6cA==
+
+#StorageClass
+
+storageClass:
+  name: retail-sc
+  provisioner: ebs.csi.aws.com
+  type: gp3
+  reclaimPolicy: Retain
+  volumeBindingMode: WaitForFirstConsumer
