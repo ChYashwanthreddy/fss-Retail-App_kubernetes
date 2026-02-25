@@ -1,14 +1,29 @@
 namespace: yash-ns
 
-#Retail App Deployment
+names:
+  deployment: retail-deployment
+  statefulset: retail-mongodb
+  mongodbService: mongodb
+  retailService: retail-service
+  configmap: retail-app-config
+  secret: retail-app-secret
+  storageClass: retail-sc
+  pvc: retail-mongodb-pvc
 
-replicas: 4
+labels:
+  retailApp: retail
+  mongodb: mongodb
 
 deployment:
-  labels:
-    app: retail
-  name: retail-container
+  replicas: 4
+  containerName: retail-container
   port: 3130
+
+statefulset:
+  replicas: 3
+  containerName: mongodb
+  port: 27017
+  storageSize: 1Gi
 
 image:
   retail:
@@ -18,43 +33,28 @@ image:
     repository: mongo
     tag: latest
 
-#Retail App Service
-
 service:
   retail:
-    app: retail
-    port: 80
     type: LoadBalancer
-
-#MongoDB StatefulSet
-
-mongodb:
-  replicas: 3
-  app: mongodb
-  port: 27017
-  database: myDatabase
-  storageSize: 1Gi
-  pvcSize: 2Gi
-
-
-#ConfigMap Values
+    port: 3130
+  mongodb:
+    port: 27017
 
 config:
   MONGODB_URI: mongodb://mongodb:27017/myDatabase
   SESSION_SECRET: "1234"
   PORT: "3130"
-
-#Secret Values(Base64)
+  MONGO_INITDB_DATABASE: myDatabase
 
 secret:
-  EMAIL_USER: Y2hhZ2FudHl0ZWphMjUwMkBnbWFpbC5jb20=
-  EMAIL_PASS: eXhvcSBianVrIHJkbnQgYWx6cA==
-
-#StorageClass
+  EMAIL_USER: chagantyteja2502@gmail.com
+  EMAIL_PASS: yxoq bjuk rdnt alzp
 
 storageClass:
-  name: retail-sc
   provisioner: ebs.csi.aws.com
   type: gp3
   reclaimPolicy: Retain
   volumeBindingMode: WaitForFirstConsumer
+
+pvc:
+  size: 2Gi

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-service
+  name: {{ .Values.names.retailService }}
   namespace: {{ .Values.namespace }}
 spec:
   selector:
-    app: {{ .Values.service.retail.app }}
+    app: {{ .Values.labels.retailApp }}
   ports:
     - protocol: TCP
       port: {{ .Values.service.retail.port }}

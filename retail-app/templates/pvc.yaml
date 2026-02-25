@@ -10,3 +10,4 @@ spec:
     requests:
       storage: {{ .Values.mongodb.pvcSize }}
   storageClassName: {{ .Values.storageClass.name }}
+

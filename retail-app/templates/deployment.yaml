@@ -1,37 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-deployment
+  name: {{ .Values.names.deployment }}
   namespace: {{ .Values.namespace }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: {{ .Values.labels.retailApp }}
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
+        app: {{ .Values.labels.retailApp }}
     spec:
       containers:
-      - name: {{ .Values.deployment.name }}
+      - name: {{ .Values.deployment.containerName }}
         image: "{{ .Values.image.retail.repository }}:{{ .Values.image.retail.tag }}"
         ports:
         - containerPort: {{ .Values.deployment.port }}
-        env:
-        - name: MONGODB_URI
-          value: "{{ .Values.config.MONGODB_URI }}"
-        - name: SESSION_SECRET
-          value: "{{ .Values.config.SESSION_SECRET }}"
-        - name: PORT
-          value: "{{ .Values.config.PORT }}"
-        - name: EMAIL_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Release.Name }}-secret
-              key: EMAIL_USER
-        - name: EMAIL_PASS
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Release.Name }}-secret
-              key: EMAIL_PASS
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.names.configmap }}
+        - secretRef:
+            name: {{ .Values.names.secret }}
