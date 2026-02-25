@@ -35,7 +35,7 @@ service:
     clusterIP: None
 
 config:
-  MONGODB_URI: mongodb://mongodb:27017/myDatabase
+  MONGODB_URI: mongodb://retail-release-mongodb-svc:27017/myDatabase
   SESSION_SECRET: "1234"
   PORT: "3130"
   MONGO_INITDB_DATABASE: myDatabase
