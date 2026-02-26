@@ -33,7 +33,7 @@ spec:
             valueFrom:
               configMapKeyRef:
                 name: retail-app-config
-                key: PORT
+                key: PORT    
           - name: EMAIL_USER
             valueFrom:
               secretKeyRef:
